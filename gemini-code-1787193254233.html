@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Titrasi Kesadahan Air</title>
+    <style>
+        :root {
+            --cream-bg: #FFFDF9;
+            --pink-accent: #FF85A1;
+            --pink-soft: #FBB1BD;
+            --pink-light: #FFE5EC;
+            --text-color: #5C3D46;
+            /* Efek Bayangan 3D (Neumorphism Soft) */
+            --shadow-out: 8px 8px 16px #e6d3d8, -8px -8px 16px #ffffff;
+            --shadow-in: inset 4px 4px 8px #e6d3d8, inset -4px -4px 8px #ffffff;
+            --shadow-btn: 0px 8px 0px #e05d7b, 0px 12px 15px rgba(0,0,0,0.15);
+            --shadow-btn-pressed: 0px 2px 0px #e05d7b, 0px 4px 6px rgba(0,0,0,0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--cream-bg);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Container Utama Fisik 3D */
+        .calculator-card {
+            background: var(--cream-bg);
+            width: 100%;
+            max-width: 480px;
+            padding: 30px;
+            border-radius: 30px;
+            box-shadow: var(--shadow-out);
+            border: 3px solid #ffffff;
+            position: relative;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            color: var(--pink-accent);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+
+        .input-group {
+            margin-bottom: 18px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-color);
+        }
+
+        /* Input Field dengan Efek 3D Cekung (Inverted) */
+        .input-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 15px;
+            background: var(--cream-bg);
+            box-shadow: var(--shadow-in);
+            color: var(--text-color);
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .input-group input:focus {
+            box-shadow: inset 2px 2px 5px #d4c0c5, inset -2px -2px 5px #ffffff;
+        }
+
+        /* Tombol Fisik 3D */
+        .btn-calculate {
+            width: 100%;
+            padding: 14px;
+            margin-top: 10px;
+            background: var(--pink-accent);
+            color: white;
+            border: none;
+            border-radius: 18px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: var(--shadow-btn);
+            transition: all 0.1s ease;
+            position: relative;
+            top: 0;
+        }
+
+        .btn-calculate:active {
+            top: 6px;
+            box-shadow: var(--shadow-btn-pressed);
+        }
+
+        /* Layar Hasil Titrasi (3D Display Panel) */
+        .result-panel {
+            margin-top: 25px;
+            padding: 20px;
+            background: var(--pink-light);
+            border-radius: 20px;
+            box-shadow: var(--shadow-in);
+            text-align: center;
+            border: 1px solid var(--pink-soft);
+        }
+
+        .result-panel h2 {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .result-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--pink-accent);
+            margin: 5px 0;
+        }
+
+        .result-status {
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 4px 12px;
+            background: #ffffff;
+            border-radius: 10px;
+            display: inline-block;
+            margin-top: 5px;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .formula-note {
+            font-size: 0.75rem;
+            text-align: center;
+            margin-top: 20px;
+            opacity: 0.7;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+
+<div class="calculator-card">
+    <div class="header">
+        <h1>Titrasi Kesadahan</h1>
+        <p>Kalkulator Kesadahan Total (CaCO₃)</p>
+    </div>
+
+    <div class="input-group">
+        <label for="volumeEdta">Volume Titran EDTA (mL)</label>
+        <input type="number" id="volumeEdta" placeholder="Contoh: 10.5" step="0.01">
+    </div>
+
+    <div class="input-group">
+        <label for="molaritasEdta">Molaritas / Normalitas EDTA (M)</label>
+        <input type="number" id="molaritasEdta" value="0.01" step="0.001">
+    </div>
+
+    <div class="input-group">
+        <label for="volumeSampel">Volume Sampel Air (mL)</label>
+        <input type="number" id="volumeSampel" value="50" step="1">
+    </div>
+
+    <button class="btn-calculate" onclick="hitungKesadahan()">HITUNG KESADAHAN</button>
+
+    <div class="result-panel">
+        <h2>Hasil Kesadahan Total</h2>
+        <div class="result-value" id="nilaiHasil">0.00</div>
+        <div style="font-size: 0.85rem; margin-bottom: 8px;">mg/L CaCO₃ (ppm)</div>
+        <div class="result-status" id="statusTeks">Masukkan data titrasi</div>
+    </div>
+
+    <div class="formula-note">
+        Rumus: (V<sub>EDTA</sub> × M<sub>EDTA</sub> × 100.09 × 1000) / V<sub>Sampel</sub>
+    </div>
+</div>
+
+<script>
+    function hitungKesadahan() {
+        const vEdta = parseFloat(document.getElementById('volumeEdta').value);
+        const mEdta = parseFloat(document.getElementById('molaritasEdta').value);
+        const vSampel = parseFloat(document.getElementById('volumeSampel').value);
+
+        if (isNaN(vEdta) || isNaN(mEdta) || isNaN(vSampel) || vSampel <= 0 || vEdta < 0) {
+            alert("Mohon masukkan nilai angka yang valid dan pastikan Volume Sampel lebih dari 0.");
+            return;
+        }
+
+        // BM CaCO3 = 100.09 g/mol
+        const kesadahan = (vEdta * mEdta * 100.09 * 1000) / vSampel;
+        const hasilFormatted = kesadahan.toFixed(2);
+
+        document.getElementById('nilaiHasil').innerText = hasilFormatted;
+
+        // Kategori Tingkat Kesadahan Air (Standar Umum Permenkes/USGS)
+        let status = "";
+        let warnaStatus = "";
+
+        if (kesadahan < 60) {
+            status = "Lunak (Soft)";
+            warnaStatus = "#4CAF50";
+        } else if (kesadahan <= 120) {
+            status = "Agak Sadah (Moderately Hard)";
+            warnaStatus = "#FF9800";
+        } else if (kesadahan <= 180) {
+            status = "Sadah (Hard)";
+            warnaStatus = "#FF5722";
+        } else {
+            status = "Sangat Sadah (Very Hard)";
+            warnaStatus = "#E91E63";
+        }
+
+        const elStatus = document.getElementById('statusTeks');
+        elStatus.innerText = status;
+        elStatus.style.color = warnaStatus;
+    }
+</script>
+
+</body>
+</html>
